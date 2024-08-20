@@ -1,33 +1,29 @@
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {StyleSheet, Text, View, FlatList, Button} from 'react-native';
-import React, {useState, useEffect} from 'react';
+import {fetchData, toggleList} from './components/Redux/action';
 
 const App = () => {
-  const [data, setData] = useState([]);
-  const [showList, setShowList] = useState(false);
-
-  const getAPIData = async () => {
-    const url = 'https://jsonplaceholder.typicode.com/posts';
-    const result = await fetch(url);
-    const results = await result.json();
-    setData(results);
-  };
+  const dispatch = useDispatch();
+  const data = useSelector(state => state.data.items);
+  const showList = useSelector(state => state.data.showList);
 
   useEffect(() => {
-    getAPIData();
-  }, []);
+    dispatch(fetchData());
+  }, [dispatch]);
 
   return (
     <View style={styles.main}>
       <View style={!showList ? styles.showBtn : styles.hideBtn}>
         <Button
           title={showList ? 'Hide List' : 'Show List'}
-          onPress={() => setShowList(!showList)}
+          onPress={() => dispatch(toggleList())}
           color={showList ? 'blue' : ''}
         />
       </View>
       {showList && (
         <View>
-          <Text style={styles.heading}>APIList</Text>
+          <Text style={styles.heading}>API List</Text>
           <FlatList
             data={data}
             renderItem={({item}) => (
@@ -55,10 +51,6 @@ const styles = StyleSheet.create({
   hideBtn: {
     marginTop: 30,
     marginLeft: 330,
-    // position: 'absolute',
-    // top: 0,
-    // right: 5,
-    // zIndex: 1,
   },
   heading: {
     fontSize: 20,
@@ -81,3 +73,34 @@ const styles = StyleSheet.create({
     textTransform: 'capitalize',
   },
 });
+
+// import {StyleSheet, Text, View} from 'react-native';
+// import React, {useState} from 'react';
+// import Component1 from './components/Component1';
+// import Component2 from './components/Component2';
+
+// const App2 = () => {
+//   const data = [
+//     {
+//       id: 1,
+//       name: 'sujan',
+//       color: 'blue',
+//       price: '100',
+//       image: '../assets/dp.png',
+//     },
+//   ];
+//   return (
+//     <View style={styles.main}>
+//       <Component1 />
+//       {data.map(item => (
+//         <Component2 item={item} />
+//       ))}
+//     </View>
+//   );
+// };
+
+// export default App2;
+
+// const styles = StyleSheet.create({
+//   main: {},
+// });
